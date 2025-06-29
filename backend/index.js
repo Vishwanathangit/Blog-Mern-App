@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require("cors")
+require("dotenv").config();
 
 const app = express();
 app.use(cors())
@@ -12,7 +13,7 @@ app.use(cors())
 app.use(bodyParser.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://vishwanathan1720:KyqKMNJsZkDFkgFP@cluster0.5evf9du.mongodb.net/Blog_DB?retryWrites=true&w=majority&appName=Cluster0').then(()=>{
+mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("Connection Successfull")
 })
 
