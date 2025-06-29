@@ -14,29 +14,26 @@ function Blogs() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    const unsubscribe = auth.onAuthStateChanged(function (user) {
-      if (user) {
-        if (user.uid === "zzbP63FZaLTtQIMBdhVfTeLgNcs1") {
-          setAdmin(true);
-        } else {
-          setAdmin(false);
-        }
-      } else {
-        setAdmin(false);
-      }
-    });
+ useEffect(() => {
+  window.scrollTo(0, 0);
+  const unsubscribe = auth.onAuthStateChanged(function (user) {
+    if (user) {
+      const adminUid = import.meta.env.VITE_FIREBASE_ADMIN_UID;
+      setAdmin(user.uid === adminUid);
+    } else {
+      setAdmin(false);
+    }
+  });
 
-    fetchBlogs();
-    return () => unsubscribe();
-  }, []);
+  fetchBlogs();
+  return () => unsubscribe();
+}, []);
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
       setError("");
-      const response = await axios.get("http://localhost:5000/api/blogs");
+      const response = await axios.get("https://blog-mern-app-20ir.onrender.com/api/blogs");
       setBlogs(response.data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -51,7 +48,7 @@ function Blogs() {
 
   const handleLike = async (blog_id) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/blogs/like/${blog_id}`);
+      const response = await axios.patch(`https://blog-mern-app-20ir.onrender.com/api/blogs/like/${blog_id}`);
       if (response.status === 200) {
         setBlogs((prevBlogs) =>
           prevBlogs.map((blog) =>
@@ -84,7 +81,7 @@ function Blogs() {
         newContent,
         likes: 0,
       };
-      const response = await axios.post("http://localhost:5000/api/blogs", blogData);
+      const response = await axios.post("https://blog-mern-app-20ir.onrender.com/api/blogs", blogData);
       setBlogs((prevBlogs) => [response.data, ...prevBlogs]);
       setNewTitle("");
       setNewContent("");
